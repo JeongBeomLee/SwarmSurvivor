@@ -19,12 +19,13 @@ ASSPlayerCharacter::ASSPlayerCharacter()
 	// Create spring arm
 	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
 	SpringArmComponent->SetupAttachment(RootComponent);
-	SpringArmComponent->TargetArmLength = 800.0f;
-	SpringArmComponent->SetRelativeRotation(FRotator(-60.0f, 0.0f, 0.0f));
+	SpringArmComponent->TargetArmLength = 1000.0f;
+	SpringArmComponent->SetRelativeRotation(FRotator(-70.0f, 0.0f, 0.0f));
 	SpringArmComponent->bUsePawnControlRotation = false;
 	SpringArmComponent->bInheritPitch = false;
 	SpringArmComponent->bInheritYaw = false;
 	SpringArmComponent->bInheritRoll = false;
+	SpringArmComponent->bDoCollisionTest = false;
 
 	// Create camera
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
