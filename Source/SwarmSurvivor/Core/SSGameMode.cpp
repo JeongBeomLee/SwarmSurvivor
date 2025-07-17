@@ -3,6 +3,7 @@
 
 #include "Core/SSGameMode.h"
 #include "Character/SSPlayerCharacter.h"
+#include "Game/SSSpawnManager.h"
 //#include "Engine/Engine.h"
 //#include "Engine/World.h"
 //#include "TimerManager.h"
@@ -40,6 +41,21 @@ void ASSGameMode::BeginPlay()
 	bGameStarted = false;
 	bGameEnded = false;
 
+	// Create spawn manager
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.Owner = this;
+	SpawnManager = GetWorld()->SpawnActor<ASSSpawnManager>(ASSSpawnManager::StaticClass(), FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
+
+	if (!SpawnManager)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Failed to create SpawnManager!"));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("SpawnManager created successfully"));
+		SpawnManager->StopAutoSpawn();
+	}
+
 	// Start the game after a short delay
 	FTimerHandle StartGameTimer;
 	GetWorldTimerManager().SetTimer(StartGameTimer, this, &ASSGameMode::StartGame, 1.0f, false);
@@ -68,6 +84,13 @@ void ASSGameMode::StartGame()
 
 		UE_LOG(LogTemp, Warning, TEXT("Game Started!"));
 
+		// Start enemy spawning
+		if (SpawnManager)
+		{
+			SpawnManager->StartAutoSpawn();
+			UE_LOG(LogTemp, Warning, TEXT("Enemy spawning started"));
+		}
+
 		// TODO: Initialize wave manager, spawn manager, etc.
 		// This will be implemented in later days
 	}
@@ -78,6 +101,14 @@ void ASSGameMode::EndGame(bool bPlayerWon)
 	if (bGameEnded == false)
 	{
 		bGameEnded = true;
+
+		// Stop enemy spawning
+		if (SpawnManager)
+		{
+			SpawnManager->StopAutoSpawn();
+			// Optionally clear all enemies
+			SpawnManager->ClearAllEnemies();
+		}
 
 		if (bPlayerWon == true)
 		{

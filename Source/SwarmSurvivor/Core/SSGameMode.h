@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -6,9 +6,8 @@
 #include "GameFramework/GameModeBase.h"
 #include "SSGameMode.generated.h"
 
-/**
- * 
- */
+class ASSSpawnManager;
+
 UCLASS()
 class SWARMSURVIVOR_API ASSGameMode : public AGameModeBase
 {
@@ -19,6 +18,10 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+
+	// Spawn Manager
+	UPROPERTY(BlueprintReadOnly, Category = "Game Systems")
+	TObjectPtr<ASSSpawnManager> SpawnManager;
 
 public:
 	// Game state management
@@ -34,6 +37,10 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Game")
 	float MaxGameTime = 900.0f;
+
+	// Getter
+	UFUNCTION(BlueprintPure, Category = "Game Systems")
+	FORCEINLINE ASSSpawnManager* GetSpawnManager() const { return SpawnManager; }
 
 protected:
 	virtual void Tick(float DeltaTime) override;
